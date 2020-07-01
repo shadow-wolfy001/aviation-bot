@@ -1,0 +1,14 @@
+{
+  "name": "aviaton-bot",
+  "version": "1.0.0",
+  "description": "a public discord bot written in JS using the Discord.js library",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "myles nugent",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.2.0"
+  }
+}
