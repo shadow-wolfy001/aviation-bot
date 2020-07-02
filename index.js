@@ -377,5 +377,3 @@ if (isNaN(args[0]))
   message.channel.send(embed);
     }
   });
-
-
