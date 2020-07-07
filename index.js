@@ -70,8 +70,10 @@ client.on("guildDelete", guild => {
 
 client.on("message", async message => {
 
+  const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
   const { prefix, token } = require('./config.json');
 
+  let reason = args.slice(1).join(' ');
 
   const trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
 
@@ -79,16 +81,16 @@ client.on("message", async message => {
 
   const Discord = require('discord.js');
 
-  let member = message.mentions.members.first();
-  
+
   if(message.author.bot) return;
 
-  
+  if (!message.guild.name === 'Communist Party Of Discord')
+  return;
 
   if(!message.content.startsWith(config.prefix)) return;
   
   
-  const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+  
   const command = args.shift().toLowerCase();
 
   if(command === "help") {
@@ -96,7 +98,7 @@ client.on("message", async message => {
     .setColor('#ffffff')
     .setTitle(`Help`) 
     .addFields(
-      { name: 'Moderation', value: 'Ban, Kick, Warn,' },
+      { name: 'Moderation', value: 'Ban, Kick, Warn, Mute, GG,' },
       { name: 'Utility', value: 'Slowmode', inline: true },
       { name: 'Fun', value: 'Bork, Waddle, Urban, Ahegao, ', inline: true },
     )
@@ -202,7 +204,7 @@ message.channel.send(ahegaoEmbed)
   if(command === `warn`){          
 
     let dMessage = args.join(" ").slice(22);
-
+    let member = message.mentions.members.first();
     let WarnCantFindEmbed = new Discord.MessageEmbed()
     .setTitle('I cant warn somebody if you dont tell me who to warn :/')
 
@@ -248,27 +250,33 @@ message.channel.send(ahegaoEmbed)
 }
 
 
+
+
+
+
+
+
+
   if(command === "ban") {
 
 
 
-
-      let RolePermsEmbed = new Discord.MessageEmbed()
-      .setColor('#cf1313')
-      .setTitle(`${message.author.username}, You do not have the required permission to do this`) 
-      .setTimestamp()
-      if(!message.member.hasPermission("BAN_MEMBERS"))
-      
-      return message.channel.send(RolePermsEmbed);
-
-
-
-
-      let member = message.mentions.members.first();
-    let validMemberEmbed = new Discord.MessageEmbed()
+    let RolePermsEmbed = new Discord.MessageEmbed()
     .setColor('#cf1313')
-    .setTitle(`${message.author.username}, please mention a valid user of this server`)
+    .setTitle(`${message.author.username}, You do not have the required permission to do this`) 
     .setTimestamp()
+    if(!message.member.hasPermission("BAN_MEMBERS"))
+    
+    return message.channel.send(RolePermsEmbed);
+
+
+
+
+    let member = message.mentions.members.first();
+  let validMemberEmbed = new Discord.MessageEmbed()
+  .setColor('#cf1313')
+  .setTitle(`${message.author.username}, please mention a valid user of this server`)
+  .setTimestamp()
 
 let missingBotPermmisionsEmbed = new Discord.MessageEmbed()
 .setColor('#cf1313')
@@ -286,39 +294,88 @@ let bansuccesEmbed = new Discord.MessageEmbed()
 
 
 
-    if(!member)
-      return message.channel.send(validMemberEmbed);
-    if(!member.bannable) 
-      return message.channel.send(missingBotPermmisionsEmbed);
+  if(!member)
+    return message.channel.send(validMemberEmbed);
+  if(!member.bannable) 
+    return message.channel.send(missingBotPermmisionsEmbed);
 
-    if(!reason) reason = "No reason provided";
-    await console.log(`ban command has been used in ${message.guild.name} by ${message.author.username}`);
+  if(!reason) reason = "No reason provided";
+  await console.log(`ban command has been used in ${message.guild.name} by ${message.author.username}`);
 
-    let BanDmembed = new Discord.MessageEmbed()
-    .setTitle('You have been banned')
-    .addFields(
-    { name: 'You have been Banned from ', value: `${message.guild.name}` },
-      { name: 'Banned By', value: `${message.author.username}`, inline: true },
-      { name: 'reason', value: (reason)},
-    );
+  let BanDmembed = new Discord.MessageEmbed()
+  .setTitle('You have been banned')
+  .addFields(
+  { name: 'You have been Banned from ', value: `${message.guild.name}` },
+    { name: 'Banned By', value: `${message.author.username}`, inline: true },
+    { name: 'reason', value: (reason)},
+  );
 
+   member.send(BanDmembed)
+  await member.ban(reason)
+    .catch(error => message.reply(`Sorry ${message.author} I couldn't ban because of : ${error}`));
+  message.channel.send(bansuccesEmbed);
 
-     member.send(BanDmembed)
-    await member.ban(reason)
-      .catch(error => message.reply(`Sorry ${message.author} I couldn't ban because of : ${error}`));
-    message.channel.send(bansuccesEmbed);
-  }
+  const banchannel = message.guild.channels.cache.get('728057875959906356');
+  banchannel.send(bansuccesEmbed)
 
-
-  let nonumberembed = new Discord.MessageEmbed()
-  .setTitle(`You did not give me a time for how long slowmode should be`)
-  .setTimestamp()
+}
 
 
+if(command === 'mute') {
+
+
+if(!message.member.hasPermission("MANAGE_MEMBERS"))
+ return message.channel.send(RolePermsEmbed)
 
 
 
+ let mutevalidmemberembed = new Discord.MessageEmbed()
+ .setTitle('No user mentioned')
+   .addFields(
+     { name:  ` Please enter a valid user`, value:`Cant mute if you dont tell me who` },
+   
+    )
 
+let member = message.mentions.members.first();
+
+if (!member)
+return message.channel.send (mutevalidmemberembed)
+
+let reason = args.slice(1).join(' ');
+
+let nomutereasonembed = new Discord.MessageEmbed()
+.setTitle(`No reason given`)
+.addFields(
+  { name:  ` Please enter a mute reason`, value: `!mute <user> <reason>` },
+
+ )
+
+if (!reason)
+
+return message.channel.send (nomutereasonembed)
+
+  const muterole = message.guild.roles.cache.find(role => role.name === 'Muted');
+
+member.roles.add(muterole);
+
+
+let MuteEmbed  = new Discord.MessageEmbed()
+.setTitle('Sucsefully Muted!')
+.addFields(
+  { name:  ` Sucsefully muted`, value:`${member.user.username}` },
+  { name:  `Muted for`, value:`${reason}` },
+ )
+ 
+ message.channel.send(MuteEmbed)
+
+let muteDMembed = new Discord.MessageEmbed()
+setTitle(`You have been muted`)
+.addFields(
+  { name:  ` You have been muted in ${message.guild.name} `, value:`Muted for ${reason}` },
+
+ )
+member.send(muteDMembed)
+}
   if(command === "slowmode") {
 
     let RolePermsEmbed = new Discord.MessageEmbed()
@@ -326,12 +383,22 @@ let bansuccesEmbed = new Discord.MessageEmbed()
     .setTitle(`${message.author.username}, You do not have the required permission to do this`) 
     .setTimestamp()
     if(!message.member.hasPermission("MANAGE_MESSAGES"))
+
+
     
+
   return message.channel.send(RolePermsEmbed)
 
-
+let nonumberembed = new Discord.MessageEmbed()
+.setTitle('No Slomwode Time Specified')
 
 if (isNaN(args[0]))
+
+ 
+  
+
+
+
  return message.channel.send(nonumberembed)
  await console.log(`slowmode command has been used in ${message.guild.name} by ${message.author.username}`);
 
@@ -343,6 +410,45 @@ if (isNaN(args[0]))
  .setTimestamp()
  message.channel.send(slowmodeembed)
   }
+
+
+  if(command === "purge") {
+      
+    let RolePermsEmbed = new Discord.MessageEmbed()
+    .setColor('#cf1313')
+    .setTitle(`${message.author.username}, You do not have the required permission to do this`) 
+    .setTimestamp()
+    if(!message.member.hasPermission("MANAGE_MESSAGES"))
+return message.channel.send(RolePermsEmbed)
+
+    
+    const deleteCount = parseInt(args[0], 10);
+    let nodeletenumberembed = new Discord.MessageEmbed()
+    .setTitle(`Enter a purge amount between 2 - 100`)
+   
+    if(!deleteCount || deleteCount < 2 || deleteCount > 100)
+      return message.channel.send(nodeletenumberembed);
+    
+   
+    const fetched = await message.channel.messages.fetch({limit: deleteCount});
+
+
+    let purgeembed = new Discord.MessageEmbed()
+    .setTitle(`Succesfully Purged ${deleteCount} messages`)
+
+    
+  
+    message.channel.bulkDelete(fetched)
+
+    message.channel.send(purgeembed)
+    .then(message => {
+      message.delete({ timeout: 2000})
+    })
+      .catch(error => message.reply(`Couldn't delete messages because of: ${error}`));
+  }
+
+
+
 
 
 
@@ -362,8 +468,7 @@ if (isNaN(args[0]))
   }
 
   const [answer] = list;
-
-  const embed = new Discord.MessageEmbed()
+  let embed = new Discord.MessageEmbed()
     .setColor('#EFFF00')
     .setTitle(answer.word)
     .setURL(answer.permalink)
@@ -376,4 +481,127 @@ if (isNaN(args[0]))
     await console.log(`urban command has been used in ${message.guild.name} by ${message.author.username}`);
   message.channel.send(embed);
     }
+
+    if(command === 'gg') {
+
+
+      if(!message.member.hasPermission("KICK_MEMBERS"))
+       return message.channel.send(RolePermsEmbed)
+      
+      
+      
+       let mutevalidmemberembed = new Discord.MessageEmbed()
+       .setTitle('No user mentioned')
+         .addFields(
+           { name:  ` Please enter a valid user`, value:`Cant send someone if you dont tell me who` },
+         
+          )
+      
+      let member = message.mentions.members.first();
+      
+      if (!member)
+      return message.channel.send (mutevalidmemberembed)
+      
+      let reason = args.slice(1).join(' ');
+      
+      let nomutereasonembed = new Discord.MessageEmbed()
+      .setTitle(`No reason given`)
+      .addFields(
+        { name:  ` Please enter a gulag reason`, value: `!gg <user> <reason>` },
+      
+       )
+      
+      if (!reason)
+      
+      return message.channel.send (nomutereasonembed)
+      
+        const gulagrole = message.guild.roles.cache.find(role => role.name === 'Gulag');
+        const comraderole = message.guild.roles.cache.find(role => role.name === 'Comrade');
+      member.roles.add(gulagrole);
+      member.roles.remove(comraderole);
+      
+      let GGEmbed  = new Discord.MessageEmbed()
+      .setTitle('Succesfully sent to the gulag!!')
+      .addFields(
+        { name:  ` Succesfully Sent to the gulag`, value:`${member}` },
+        { name:  `Sent to the gulag because`, value:`${reason}` },
+       )
+       
+       message.channel.send(GGEmbed)
+      
+      let GulagDMembed = new Discord.MessageEmbed()
+      setTitle(`You have been sent to the gulag!`)
+      .addFields(
+        { name:  ` You have been sent to the gulag  in ${message.guild.name} `, value:`Sent for ${reason}` },
+      
+       )
+      member.send(GulagDMembed)
+      }
+
+
+
+
   });
+
+
+
+
+  const ReactionRole = require("reaction-role");
+const reactionRole = new ReactionRole(token);
+ 
+let option1 = reactionRole.createOption("✅", "728057875578093613")
+ 
+
+reactionRole.createMessage("728082693954338868", "728057876278411407", true, option1, );
+ 
+
+reactionRole.init();
+
+reactionRole.reInit();
+
+
+client.on('messageDelete', async message => {
+  
+  
+  
+  
+
+
+  const logschannel = client.channels.cache.get('728057875959906354');
+
+
+    let MessageDeleteEmbed = new Discord.MessageEmbed()
+    .setTitle(`Message deleted in ${message.channel.name}`)
+    .addFields(
+      { name: 'Message Content ', value: `${message.content}` },
+      { name: 'Message Author', value: `${message.author.username}`, inline: true },
+    
+    );
+    
+
+       
+        logschannel.send(MessageDeleteEmbed)
+
+      });
+
+
+
+ 
+      client.on("guildMemberAdd",  member => {
+let welcomeembed = new Discord.MessageEmbed()
+.setTitle(`Welcome ${member.user.username} To the Server!`)
+.addFields(
+  { name: 'Welcome to', value: `${member.guild.name}` },
+  { name: `${member.user.username}`, value: `Welcome comrade, please read the rules in <#728057876106444906> or risk being sent to the gulag!`, inline: true },
+
+);
+const comraderole = member.guild.roles.cache.find(role => role.name === 'Comrade')
+const GeneralChat = client.channels.cache.get('728057876278411411');
+
+GeneralChat.send(welcomeembed)
+
+
+      });
+
+
+    
