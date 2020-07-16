@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+  console.log(` Succesfully Logged in as ${client.user.tag} <3!`);
 });
 
 const { prefix, token } = require('./config.json');
@@ -84,8 +84,7 @@ client.on("message", async message => {
 
   if(message.author.bot) return;
 
-  if (!message.guild.name === 'Communist Party Of Discord')
-  return;
+  
 
   if(!message.content.startsWith(config.prefix)) return;
   
@@ -98,8 +97,8 @@ client.on("message", async message => {
     .setColor('#ffffff')
     .setTitle(`Help`) 
     .addFields(
-      { name: 'Moderation', value: 'Ban, Kick, Warn, Mute, GG,' },
-      { name: 'Utility', value: 'Slowmode', inline: true },
+      { name: 'Moderation', value: 'Ban, Kick, Warn, Mute,' },
+      { name: 'Utility', value: 'Slowmode, Purge', inline: true },
       { name: 'Fun', value: 'Bork, Waddle, Urban, Ahegao, ', inline: true },
     )
     .setTimestamp()
@@ -209,8 +208,8 @@ message.channel.send(ahegaoEmbed)
     .setTitle('I cant warn somebody if you dont tell me who to warn :/')
 
 
-    let ServerWarnEmbed = new Discord.MessageEmbed()
-    .setTitle(`${message.author.username} has warned ${member} for ${dMessage}`)
+  
+ 
 
     let NoWarnReason = new Discord.MessageEmbed()
     .setTitle('You need to enter a valid reason.')
@@ -234,15 +233,21 @@ message.channel.send(ahegaoEmbed)
 
     return message.channel.send(NoWarnReason)
 
-    WarnEmbed = new Discord.MessageEmbed()
+  let  WarnEmbed = new Discord.MessageEmbed()
     .setTitle(`you have been warned`)
     .addFields(
-     { name: 'You have been warned in ', value:`${message.guild.name}` },
-     { name: 'Warned By', value: `${message.author.username}`, inline: true },
-     { name: 'reason', value: (dMessage)},
+      { name: 'Warned in', value: `${message.guild.name}`, },
+     { name: 'Warned By', value: `${message.author.username}`, },
+     { name: 'Reason', value: (dMessage)},
     )
 
-
+    let ServerWarnEmbed = new Discord.MessageEmbed()
+    .setTitle(`Succesfully warned ${member.user.username}`)
+    .addFields(
+      { name: 'Warned for', value:`${dMessage}` },     { name: 'Warned By', value: `${message.author.username}`, inline: true },
+  
+    
+     )
 
     member.send(WarnEmbed)
     await console.log(`warn command has been used in ${message.guild.name} by ${message.author.username}`);
@@ -319,6 +324,13 @@ let bansuccesEmbed = new Discord.MessageEmbed()
   banchannel.send(bansuccesEmbed)
 
 }
+
+
+
+
+
+
+
 
 
 if(command === 'mute') {
@@ -438,11 +450,11 @@ return message.channel.send(RolePermsEmbed)
 
     
   
-    message.channel.bulkDelete(fetched)
+   await message.channel.bulkDelete(fetched)
 
     message.channel.send(purgeembed)
-    .then(message => {
-      message.delete({ timeout: 2000})
+    .then(msg => {
+      msg.delete({ timeout: 2000})
     })
       .catch(error => message.reply(`Couldn't delete messages because of: ${error}`));
   }
@@ -481,6 +493,8 @@ return message.channel.send(RolePermsEmbed)
     await console.log(`urban command has been used in ${message.guild.name} by ${message.author.username}`);
   message.channel.send(embed);
     }
-   
 
-}):
+
+  });
+
+
