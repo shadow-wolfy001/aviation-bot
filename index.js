@@ -125,10 +125,50 @@ await console.log(`bork command has been used in ${message.guild.name} by ${mess
 message.channel.send(borkEmbed)
 }     
 
+if (command === "8ball") {
+
+const eightball = [
+
+
+"Yes",  "No",
+"Unsure",
+
+"Mabye",
+
+"Concentrate and ask again",
+
+"Definetly"
+
+
+
+
+]
+
+const eightballrandom = eightball[Math.floor (Math.random() * eightball.length) ]
+
+let eightballembed = new Discord.MessageEmbed()
+.setTitle(`You have asked thy great 8ball`)
+.addFields(
+  { name: 'Your answer is', value: eightballrandom, },
+)
+
+return message.channel.send(eightballembed)
+
+}
  if (command === "ahegao")  {
+
+  const aleghro = ["https://cdn.discordapp.com/attachments/723566792521547826/733874684399058964/mydocttfycn31.png",
+  "https://cdn.discordapp.com/attachments/723566792521547826/733874852783456357/2Q.png",
+  "https://cdn.discordapp.com/attachments/592463507124125706/723222937175326791/ahego_.png",
+  "https://cdn.discordapp.com/attachments/707354557814014032/733875769658310706/4845195bceb02f06b01fc9cc7a642499.png",
+  "https://cdn.discordapp.com/attachments/719017965277937726/733876938384343085/312059436013211.png",
+]
+  const randomAleghro = aleghro[Math.floor(Math.random() * aleghro.length)]
+
+
    let ahegaoEmbed = new Discord.MessageEmbed()
    .setTitle(`Ahegao!`)
-   .setImage(`https://cdn.discordapp.com/attachments/592463507124125706/723222937175326791/ahego_.png`)
+   .setImage(randomAleghro)
    .setTimestamp()
    await console.log(`ahegao command has been used in ${message.guild.name} by ${message.author.username}`);
 message.channel.send(ahegaoEmbed)
@@ -156,7 +196,7 @@ message.channel.send(ahegaoEmbed)
 
   if(command === "kick") {
     let RolePermsEmbed = new Discord.MessageEmbed()
-    .setColor('#cf1313')
+    .setColor('RED')
     .setTitle(`${message.author.username}, You do not have the required permission to do this, kick members perms is required`) 
     .setTimestamp()
     
@@ -167,12 +207,12 @@ message.channel.send(ahegaoEmbed)
     
     let member = message.mentions.members.first();
     let validMemberEmbed = new Discord.MessageEmbed()
-    .setColor('#cf1313')
+    .setColor('RED')
     .setTitle(`${message.author.username}, please mention a valid user of this server`)
     .setTimestamp()
 
     let missingBotKickPermmisionsEmbed = new Discord.MessageEmbed()
-    .setColor('#cf1313')
+    .setColor('RED')
     .setTitle(`${message.author.username}, I dont have the permmision to do this.`)
 
     if(!member)
@@ -181,22 +221,29 @@ message.channel.send(ahegaoEmbed)
     return message.channel.send(missingBotKickPermmisionsEmbed)
     
 
-    let missingBotPermmisionsEmbed = new Discord.MessageEmbed()
-    .setColor('#cf1313')
-    .setTitle(`${message.author.username}, I dont have the permmision to do this.`)
-    
     let reason = args.slice(1).join(' ');
     let kicksuccesEmbed = new Discord.MessageEmbed()
     .setColor('#20d44d')
-    .setTitle(`The user has been kicked by ${message.author.tag} because: ${reason}`)
+    .setTitle(`${member.user.username} has been kicked by ${message.author.tag} because: ${reason}`)
+
+    let kickdmembed = new Discord.MessageEmbed( )
+.setTitle(`You have been kicked from ${message.guild.name}`)
+    let nokickreasonembed = new Discord.MessageEmbed()
+    .setColor('RED')
+    .addFields(
+      { name: 'No reason entered', value: `Please enter a valid reason`, },
+    )
     
-    if(!reason) reason = "No reason provided";
-    
+    if(!reason)
+   
+    return message.channel.send(nokickreasonembed)
+
+
     await console.log(`kick command has been used in ${message.guild.name} by ${message.author.username}`);
      member.kick(reason)
       .catch(error => message.reply(`Sorry ${message.author} I couldn't kick because of : ${error}`));
     message.channel.send(kicksuccesEmbed);
-
+member.user.send(kickdmembed)
   }
 
 
@@ -205,13 +252,19 @@ message.channel.send(ahegaoEmbed)
     let dMessage = args.join(" ").slice(22);
     let member = message.mentions.members.first();
     let WarnCantFindEmbed = new Discord.MessageEmbed()
+    .setColor('RED')
     .setTitle('I cant warn somebody if you dont tell me who to warn :/')
 
 
+    let validMemberEmbed = new Discord.MessageEmbed()
+    .setColor('RED')
+    .setTitle(`${message.author.username}, please mention a valid user of this server`)
+    .setTimestamp()
   
  
 
     let NoWarnReason = new Discord.MessageEmbed()
+    .setColor('RED')
     .setTitle('You need to enter a valid reason.')
 
 
@@ -234,6 +287,7 @@ message.channel.send(ahegaoEmbed)
     return message.channel.send(NoWarnReason)
 
   let  WarnEmbed = new Discord.MessageEmbed()
+  .setColor('RED')
     .setTitle(`you have been warned`)
     .addFields(
       { name: 'Warned in', value: `${message.guild.name}`, },
@@ -267,7 +321,7 @@ message.channel.send(ahegaoEmbed)
 
 
     let RolePermsEmbed = new Discord.MessageEmbed()
-    .setColor('#cf1313')
+    .setColor('RED')
     .setTitle(`${message.author.username}, You do not have the required permission to do this`) 
     .setTimestamp()
     if(!message.member.hasPermission("BAN_MEMBERS"))
@@ -279,7 +333,7 @@ message.channel.send(ahegaoEmbed)
 
     let member = message.mentions.members.first();
   let validMemberEmbed = new Discord.MessageEmbed()
-  .setColor('#cf1313')
+  .setColor('RED')
   .setTitle(`${message.author.username}, please mention a valid user of this server`)
   .setTimestamp()
 
@@ -289,7 +343,7 @@ let missingBotPermmisionsEmbed = new Discord.MessageEmbed()
 
 let reason = args.slice(1).join(' ');
 let bansuccesEmbed = new Discord.MessageEmbed()
-.setColor('#20d44d')
+.setColor('GREEM')
 .setTitle(`${message.author.username} has succesfully banned ${member} for ${reason}`)
 
 
@@ -304,10 +358,20 @@ let bansuccesEmbed = new Discord.MessageEmbed()
   if(!member.bannable) 
     return message.channel.send(missingBotPermmisionsEmbed);
 
-  if(!reason) reason = "No reason provided";
+    let nobanreasonembed = new Discord.MessageEmbed()
+    .setColor('RED')
+    .addFields(
+      { name: 'No reason entered', value: `Please enter a valid reason`, },
+    )
+
+
+
+  if(!reason) 
+  return message.channel.send(nobanreasonembed)
   await console.log(`ban command has been used in ${message.guild.name} by ${message.author.username}`);
 
   let BanDmembed = new Discord.MessageEmbed()
+  .setColor('RED')
   .setTitle('You have been banned')
   .addFields(
   { name: 'You have been Banned from ', value: `${message.guild.name}` },
@@ -325,23 +389,63 @@ let bansuccesEmbed = new Discord.MessageEmbed()
 
 }
 
+if(command === 'unmute') {
 
 
-
-
-
-
-
-
-if(command === 'mute') {
-
-
-if(!message.member.hasPermission("MANAGE_MEMBERS"))
+  let RolePermsEmbed = new Discord.MessageEmbed()
+  .setColor('RED')
+  .setTitle(`${message.author.username}, You do not have the required permission to do this`) 
+  .setTimestamp()
+if(!message.member.hasPermission("MANAGE_MESSAGES"))
  return message.channel.send(RolePermsEmbed)
 
 
 
  let mutevalidmemberembed = new Discord.MessageEmbed()
+ .setColor('RED')
+ .setTitle('No user mentioned')
+   .addFields(
+     { name:  ` Please enter a valid user`, value:`Cant unmute if you dont tell me who` },
+   
+    )
+
+let member = message.mentions.members.first();
+
+if (!member)
+return message.channel.send (mutevalidmemberembed)
+
+let reason = args.slice(1).join(' ');
+
+
+
+  const muterole = message.guild.roles.cache.find(role => role.name === 'Muted');
+
+
+member.roles.remove(muterole);
+
+let unmuteembed = new Discord.MessageEmbed()
+.setTitle(`Succesfully unmuted ${member.user.username}`)
+.setColor('GREEN')
+
+
+
+message.channel.send(unmuteembed)
+   }
+
+if(command === 'mute') {
+
+
+  let RolePermsEmbed = new Discord.MessageEmbed()
+  .setColor('RED')
+  .setTitle(`${message.author.username}, You do not have the required permission to do this`) 
+  .setTimestamp()
+if(!message.member.hasPermission("MANAGE_MESSAGES"))
+ return message.channel.send(RolePermsEmbed)
+
+
+
+ let mutevalidmemberembed = new Discord.MessageEmbed()
+ .setColor('RED')
  .setTitle('No user mentioned')
    .addFields(
      { name:  ` Please enter a valid user`, value:`Cant mute if you dont tell me who` },
@@ -356,6 +460,7 @@ return message.channel.send (mutevalidmemberembed)
 let reason = args.slice(1).join(' ');
 
 let nomutereasonembed = new Discord.MessageEmbed()
+.setColor('RED')
 .setTitle(`No reason given`)
 .addFields(
   { name:  ` Please enter a mute reason`, value: `!mute <user> <reason>` },
@@ -368,10 +473,23 @@ return message.channel.send (nomutereasonembed)
 
   const muterole = message.guild.roles.cache.find(role => role.name === 'Muted');
 
+let nomuterole = new Discord.MessageEmbed()
+.setTitle('Unable to mute')
+.setColor('RED')
+.addFields(
+  { name:  ` Cant find mute role`, value:`Please create a role called Muted and deny it permission to send messages`},
+
+
+)
+if(!muterole)
+
+return message.channel.send(nomuterole)
+
 member.roles.add(muterole);
 
 
 let MuteEmbed  = new Discord.MessageEmbed()
+.setColor('GREEM')
 .setTitle('Sucsefully Muted!')
 .addFields(
   { name:  ` Sucsefully muted`, value:`${member.user.username}` },
@@ -381,7 +499,8 @@ let MuteEmbed  = new Discord.MessageEmbed()
  message.channel.send(MuteEmbed)
 
 let muteDMembed = new Discord.MessageEmbed()
-setTitle(`You have been muted`)
+.setColor('RED')
+.setTitle(`You have been muted`)
 .addFields(
   { name:  ` You have been muted in ${message.guild.name} `, value:`Muted for ${reason}` },
 
@@ -391,7 +510,7 @@ member.send(muteDMembed)
   if(command === "slowmode") {
 
     let RolePermsEmbed = new Discord.MessageEmbed()
-    .setColor('#cf1313')
+    .setColor('RED')
     .setTitle(`${message.author.username}, You do not have the required permission to do this`) 
     .setTimestamp()
     if(!message.member.hasPermission("MANAGE_MESSAGES"))
@@ -402,6 +521,7 @@ member.send(muteDMembed)
   return message.channel.send(RolePermsEmbed)
 
 let nonumberembed = new Discord.MessageEmbed()
+.setColor('RED')
 .setTitle('No Slomwode Time Specified')
 
 if (isNaN(args[0]))
@@ -436,6 +556,7 @@ return message.channel.send(RolePermsEmbed)
     
     const deleteCount = parseInt(args[0], 10);
     let nodeletenumberembed = new Discord.MessageEmbed()
+    .setColor('RED')
     .setTitle(`Enter a purge amount between 2 - 100`)
    
     if(!deleteCount || deleteCount < 2 || deleteCount > 100)
